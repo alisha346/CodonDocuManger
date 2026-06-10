@@ -42,19 +42,34 @@ This builds the React frontend and starts the FastAPI backend server.
 
 ## 🧩 Edge Companion Extension
 
-### Installation (One-time Setup)
+### Step 1 — Get the Source Code
+
+Clone the repository or download the ZIP from GitHub:
+
+```bash
+# Clone
+git clone https://github.com/alisha346/CodonDocuManger.git
+
+# Or download the ZIP and extract it anywhere you like
+# https://github.com/alisha346/CodonDocuManger/archive/refs/heads/main.zip
+```
+
+### Step 2 — Load the Extension in Edge (One-time Setup)
 1. Open Microsoft Edge → navigate to **`edge://extensions/`**
 2. Enable **Developer mode** (top-right toggle)
-3. Click **Load unpacked** → select the folder:
+3. Click **Load unpacked** → browse into your cloned/extracted folder and select:
    ```
-   D:\CodonDocuManger\edge_extension
+   <your-folder>/edge_extension
    ```
+   *(e.g. if you cloned to `C:\Projects\CodonDocuManger`, select `C:\Projects\CodonDocuManger\edge_extension`)*
 4. The **CodonDocuManger Companion** icon appears in your toolbar.
 
-### Register Native Messaging (One-time Setup)
+### Step 3 — Register Native Messaging (One-time Setup)
 This allows the extension to auto-start the local server:
 ```bat
-D:\CodonDocuManger\scribe\.venv\Scripts\python.exe register_native_host.py
+REM Run from inside your cloned folder
+cd <your-folder>
+scribe\.venv\Scripts\python.exe register_native_host.py
 ```
 
 ### How It Works
@@ -124,10 +139,11 @@ npm install
 
 ### Build Standalone Executable
 ```bat
-cd D:\CodonDocuManger\scribe
+REM Run from inside your cloned folder
+cd <your-folder>\scribe
 .\.venv\Scripts\python.exe build_executable.py
 ```
-Output: `D:\CodonDocuManger\CodonDocuManger.exe`
+Output: `<your-folder>\CodonDocuManger.exe`
 
 ---
 
