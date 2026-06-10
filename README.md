@@ -40,7 +40,12 @@ This builds the React frontend and starts the FastAPI backend server.
 
 ---
 
-## 🧩 Edge Companion Extension
+## 🧩 Companion Extension
+
+> **This extension is built for Chromium-based browsers and works best there.**
+> Supported browsers: **Google Chrome**, **Microsoft Edge**, **Brave**, **Opera**, **Vivaldi**, and any other Chromium-based browser.
+
+---
 
 ### Step 1 — Get the Source Code
 
@@ -54,15 +59,31 @@ git clone https://github.com/alisha346/CodonDocuManger.git
 # https://github.com/alisha346/CodonDocuManger/archive/refs/heads/main.zip
 ```
 
-### Step 2 — Load the Extension in Edge (One-time Setup)
-1. Open Microsoft Edge → navigate to **`edge://extensions/`**
-2. Enable **Developer mode** (top-right toggle)
+---
+
+### Step 2 — Load the Extension in Your Browser (One-time Setup)
+
+Open the extensions page for your browser and follow the same steps:
+
+| Browser | Extensions Page |
+|---|---|
+| **Google Chrome** | `chrome://extensions/` |
+| **Microsoft Edge** | `edge://extensions/` |
+| **Brave** | `brave://extensions/` |
+| **Opera** | `opera://extensions/` |
+| **Vivaldi** | `vivaldi://extensions/` |
+
+**Steps (same for all browsers above):**
+1. Open your browser and navigate to the extensions page from the table above
+2. Enable **Developer mode** (toggle in the top-right corner)
 3. Click **Load unpacked** → browse into your cloned/extracted folder and select:
    ```
    <your-folder>/edge_extension
    ```
    *(e.g. if you cloned to `C:\Projects\CodonDocuManger`, select `C:\Projects\CodonDocuManger\edge_extension`)*
-4. The **CodonDocuManger Companion** icon appears in your toolbar.
+4. The **CodonDocuManger Companion** icon appears in your toolbar
+
+---
 
 ### Step 3 — Register Native Messaging (One-time Setup)
 This allows the extension to auto-start the local server:
@@ -71,6 +92,7 @@ REM Run from inside your cloned folder
 cd <your-folder>
 scribe\.venv\Scripts\python.exe register_native_host.py
 ```
+
 
 ### How It Works
 
