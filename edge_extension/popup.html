@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodonDocuManger Companion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <svg class="brand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <span class="brand-name">CodonDocuManger</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="settings-btn" class="header-btn" title="Open Settings in New Tab">⚙️ Settings</button>
+        <button id="logout-btn" class="header-btn" title="Log Out" style="display: none;">Logout 🔓</button>
+        <div id="status-badge" class="badge status-disconnected">Offline</div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Gated Login Panel -->
+      <div id="login-panel" class="auth-panel">
+        <div class="auth-title">Authentication Required</div>
+        <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
+          To start recording guides, please sign in to the CodonDocuManger Web App. The companion will automatically synchronize your session.
+        </p>
+        
+        <button id="connect-webapp-btn" class="btn btn-primary" style="margin-top: 10px; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          🔑 Sign In via Web App
+        </button>
+        
+        <div style="margin-top: 16px; text-align: center; font-size: 0.72rem; color: var(--text-secondary);">
+          Don't have an account? <a href="#" id="signup-link" style="color: var(--accent); text-decoration: none; font-weight: 600;">Sign Up</a>
+        </div>
+      </div>
+
+      <!-- Main Controls Panel (Visible after login) -->
+      <div id="main-panel" style="display: none;">
+        <!-- Local Connection Alert -->
+        <div id="connection-warning" class="warning-box" style="margin-bottom: 12px;">
+          <p>⚠️ Please start the CodonDocuManger app locally to enable recording control.</p>
+        </div>
+
+        <!-- Google Drive Connection Status -->
+        <div id="drive-status-card" class="drive-status-card" style="display: none;">
+          <span id="drive-status-text">☁️ Drive: Not Connected</span>
+          <button id="connect-drive-btn" class="drive-link-btn">Link</button>
+        </div>
+
+        <div id="controls-panel" class="disabled-opacity">
+          <div class="form-group">
+            <div class="project-label-row">
+              <label for="project-select">Active Project</label>
+              <button id="new-project-btn" class="icon-btn" title="Create New Project">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+            </div>
+            <select id="project-select" class="select-input">
+              <!-- Dynamically populated -->
+            </select>
+            <!-- Inline New Project Form -->
+            <div id="new-project-form" class="new-project-form" style="display: none;">
+              <input type="text" id="new-project-name" class="text-input" placeholder="Project name..." maxlength="60">
+              <div class="new-project-actions">
+                <button id="create-project-btn" class="btn-create">Create</button>
+                <button id="cancel-project-btn" class="btn-cancel">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="guide-name">Guide Name (Optional)</label>
+            <input type="text" id="guide-name" class="text-input" placeholder="e.g. Create Account Guide">
+          </div>
+
+          <div class="form-group">
+            <label>Capture Scope Mode</label>
+            <div class="scope-toggle-group">
+              <label class="scope-option">
+                <input type="radio" name="scope-mode" value="screen" checked>
+                <span>🖥️ Entire Screen</span>
+              </label>
+              <label class="scope-option">
+                <input type="radio" name="scope-mode" value="browser">
+                <span>🌐 Browser Only</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-wrap">
+          <button id="action-btn" class="btn btn-disabled" disabled>Connecting...</button>
+        </div>
+      </div>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span id="logged-user-label">Not logged in</span>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span id="ext-version" class="ext-version"></span>
+        <span class="dot-indicator" id="alive-dot"></span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

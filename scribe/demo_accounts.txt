@@ -1,0 +1,16 @@
+💡 CodonDocuManger Pre-Populated Demo Accounts Credentials:
+
+1. Admin (Full control, branding, user management, and project deletion privileges):
+   - Username: admin
+   - Password: admin123
+   - Email: admin@codon.team
+
+2. Editor (Create/edit/record guides, but settings/branding panels are locked):
+   - Username: editor
+   - Password: editor123
+   - Email: editor@codon.team
+
+3. Viewer (Read-only access, cannot start captures or edit descriptions):
+   - Username: viewer
+   - Password: viewer123
+   - Email: viewer@codon.team

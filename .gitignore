@@ -1,0 +1,62 @@
+# ── Node / Frontend ───────────────────────────────────────────
+node_modules
+dist
+dist-ssr
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+pip-log.txt
+
+# ── Virtual environments ───────────────────────────────────────
+scribe/.venv/
+.venv/
+venv/
+env/
+
+# ── PyInstaller build artifacts ────────────────────────────────
+scribe/build/
+scribe/dist/
+*.spec
+
+# ── Compiled binaries (large, platform-specific) ───────────────
+CodonDocuManger.exe
+
+# ── User data (sessions, screenshots, credentials) ─────────────
+data/
+
+# ── Sensitive / secret files ──────────────────────────────────
+key.pem
+*.pem
+*.key
+drive_config.json
+scribe/backend/data/
+
+# ── Editor directories and files ──────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── OS files ──────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,437 @@
+/* Stylesheet for CodonDocuManger Companion Extension */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #0b0813;
+  --bg-card: rgba(21, 17, 36, 0.7);
+  --border: rgba(168, 85, 247, 0.15);
+  --text-primary: #e2d9f3;
+  --text-secondary: #9b89c4;
+  --accent: #a855f7;
+  --accent-hover: #9333ea;
+  --accent-gradient: linear-gradient(135deg, #a855f7, #7c3aed);
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  width: 320px;
+  overflow-x: hidden;
+}
+
+.popup-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-icon {
+  color: var(--accent);
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #a855f7, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.header-btn:hover {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: var(--accent);
+}
+
+.badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-disconnected {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.status-ready {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.status-recording {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  animation: pulse-border 1.5s infinite;
+}
+
+/* Auth / Login Panel */
+.auth-panel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(21, 17, 36, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.auth-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #fff, var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Google Drive Bar */
+.drive-status-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.12);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.drive-link-btn {
+  background: var(--accent-gradient);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.65rem;
+  border-radius: 3px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.drive-link-btn:hover {
+  opacity: 0.9;
+}
+
+/* Warning Box */
+.warning-box {
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #fca5a5;
+  line-height: 1.4;
+}
+
+.disabled-opacity {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Form inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.select-input, .text-input {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.select-input:focus, .text-input:focus {
+  border-color: var(--accent);
+}
+
+.select-input option {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Scope Toggle */
+.scope-toggle-group {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.scope-option {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.scope-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.scope-option span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.scope-option input:checked + span {
+  background: var(--accent-gradient);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Action Button */
+.action-wrap {
+  margin-top: 4px;
+}
+
+.btn {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+}
+
+.btn-primary:hover {
+  opacity: 0.95;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+}
+
+.btn-disabled {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+}
+
+.ext-version {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgba(168, 85, 247, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.dot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--danger);
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.dot-connected {
+  background-color: var(--success);
+  box-shadow: 0 0 6px var(--success);
+}
+
+/* Project label row with + button */
+.project-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: rgba(168, 85, 247, 0.08);
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.icon-btn:hover {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: var(--accent);
+  transform: scale(1.1);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Inline new-project form */
+.new-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 8px;
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  border-radius: 6px;
+  animation: slide-in 0.18s ease;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.new-project-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-create {
+  flex: 1;
+  padding: 5px 0;
+  border-radius: 4px;
+  border: none;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.btn-create:hover { opacity: 0.88; }
+
+.btn-cancel {
+  flex: 1;
+  padding: 5px 0;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* Animations */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(168, 85, 247, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+  }
+}

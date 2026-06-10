@@ -1,0 +1,9 @@
+{
+  "name": "com.codondocumanger.companion",
+  "description": "CodonDocuManger Companion Native Messaging Host",
+  "path": "D:\\CodonDocuManger\\native_host.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://ckbcmdglmmnofplohigcckohjbecakep/"
+  ]
+}
