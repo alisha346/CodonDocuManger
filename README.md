@@ -11,7 +11,7 @@
 | 🎥 **Screen / Browser Recording** | Capture entire screen or browser-only with one click |
 | 📄 **Auto-generated Guides** | Steps and screenshots automatically compiled into a visual guide |
 | ☁️ **Google Drive Cloud Sync** | Back up projects and guides to your Google Drive via OAuth 2.0 |
-| 🗂️ **Project Management** | Organise guides under team projects (Operations) |
+| 🗂️ **Project Management** | Organise guides under team projects |
 | 🧩 **Edge Companion Extension** | Persistent floating window that stays open while you work |
 | 🔐 **Webapp Session Sharing** | Sign in once on the web app — extension auto-authenticates |
 | 🔄 **Session Persistence** | Login retained across extension opens via `chrome.storage.local` |
@@ -21,46 +21,6 @@
 | 📤 **HTML / Markdown Export** | Export guides to HTML or Markdown |
 | 👥 **Team Members & Roles** | Admin / Editor / Viewer access per project |
 | 🏷️ **Project Branding** | Custom logo, colours, and fonts per project |
-| 🔢 **Auto Version Bumping** | Automated semver-style versioning for every release |
-
----
-
-## 🗂️ Project Structure
-
-```
-D:\CodonDocuManger\
-├── CodonDocuManger.exe          ← Standalone compiled app (run this!)
-├── run_scribe.bat               ← Dev launcher (builds frontend + runs server)
-├── bump_version.py              ← Version auto-bumper script
-├── register_native_host.py      ← Registers extension native messaging in registry
-├── native_host.py               ← Native messaging bridge (server autostart)
-├── native_host.bat              ← Batch wrapper for native_host.py
-├── com.codondocumanger.companion.json  ← Native messaging host manifest
-│
-├── edge_extension/              ← Microsoft Edge unpacked extension
-│   ├── manifest.json            ← Extension manifest (version, permissions)
-│   ├── background.js            ← Service worker (toolbar click, session store)
-│   ├── content.js               ← Injected into webapp tab (session watcher)
-│   ├── popup.html               ← Extension UI
-│   ├── popup.css                ← Extension styles
-│   ├── popup.js                 ← Extension controller
-│   └── icon.png
-│
-└── scribe/                      ← Source code
-    ├── frontend/                ← React + TypeScript + Vite webapp
-    │   └── src/
-    │       ├── App.tsx          ← Main application component
-    │       ├── api.ts           ← API client
-    │       ├── types.ts         ← TypeScript types
-    │       └── components/      ← ControlPanel, Timeline, ExportModal
-    ├── backend/                 ← FastAPI Python backend
-    │   ├── main.py              ← API server entry point
-    │   ├── storage.py           ← Project/session JSON storage
-    │   ├── drive.py             ← Google Drive REST API integration
-    │   └── config.py            ← App config & portable paths
-    ├── build_executable.py      ← Build script (npm build + PyInstaller)
-    └── .venv/                   ← Python virtual environment
-```
 
 ---
 
@@ -143,27 +103,6 @@ Click Extension Icon
 
 ---
 
-## 🔢 Version Management
-
-The extension version is managed automatically via `bump_version.py`.
-
-| Release Type | Format | Command |
-|---|---|---|
-| Minor fix / small update | `1.0.xx` | `python bump_version.py` |
-| Major feature release | `1.YY.01` | `python bump_version.py --major` |
-
-```bat
-REM Minor update (e.g. 1.0.02 → 1.0.03)
-.\scribe\.venv\Scripts\python.exe bump_version.py
-
-REM Major update (e.g. 1.0.03 → 1.01.01)
-.\scribe\.venv\Scripts\python.exe bump_version.py --major
-```
-
-After bumping, reload the extension in `edge://extensions/` for the version to take effect.
-
----
-
 ## 🔨 Building from Source
 
 ### Prerequisites
@@ -192,54 +131,12 @@ Output: `D:\CodonDocuManger\CodonDocuManger.exe`
 
 ---
 
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | React 18, TypeScript, Vite |
-| **Backend** | Python, FastAPI, Uvicorn |
-| **Recording** | `mss` (screenshots), `pynput` (keyboard/mouse hooks) |
-| **Packaging** | PyInstaller (single `.exe`) |
-| **Extension** | Manifest V3, Chrome Storage API, Native Messaging |
-| **Cloud** | Google Drive REST API (OAuth 2.0) |
-
----
-
-## 🔑 Default Accounts
-
-| Username | Password | Role |
-|---|---|---|
-| `admin` | `admin123` | Admin |
-
-> To create additional accounts, use the **Sign Up** link in the web app or extension.
-
----
-
-## 📋 Keyboard Shortcuts
-
-| Shortcut | Action |
-|---|---|
-| **F9** | Stop active recording session from anywhere on screen |
-
----
-
-## 📁 Data Storage
-
-All data is stored locally at:
-```
-D:\CodonDocuManger\data\
-├── projects.json     ← Project metadata
-├── users.json        ← User accounts
-├── sessions\         ← Individual guide sessions
-└── screenshots\      ← Captured screenshots per session
-```
-
----
-
-## 🔄 Changelog
+## 📋 Changelog
 
 | Version | Type | Changes |
 |---|---|---|
+| `1.02.01` | Enhancement | Auto-version system with watcher and footer version display |
+| `1.01.01` | Enhancement | Added + New Project button to extension popup |
 | `1.0.02` | Minor | Webapp session auto-sync to extension via `content.js`; `chrome.storage.local` persistence |
 | `1.0.01` | Minor | Sign Up tab redirection; native messaging server autostart; tab reuse; webapp login sharing |
 | `1.0.0` | Major | Initial release: recording, guide editor, Google Drive, Edge extension, project management |
