@@ -474,26 +474,33 @@ def _draw_highlight(img: Image.Image, x: int, y: int, action: str, direction: st
     draw = ImageDraw.Draw(overlay)
 
     if action == "click":
-        # Red click indicator standardized with higher opacity
-        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
-            draw.ellipse(
-                [x - r, y - r, x + r, y + r],
-                outline=(239, 68, 68, alpha),
-                width=3,
-            )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(239, 68, 68, 255))
+        # 1. Soft red translucent outer ripple
+        draw.ellipse([x - 25, y - 25, x + 25, y + 25], fill=(239, 68, 68, 50), outline=(239, 68, 68, 180), width=2)
+        # 2. High-contrast inner white ring with solid red border
+        draw.ellipse([x - 12, y - 12, x + 12, y + 12], fill=(255, 255, 255, 180), outline=(239, 68, 68, 255), width=2)
+        # 3. Core red dot
+        draw.ellipse([x - 5, y - 5, x + 5, y + 5], fill=(239, 68, 68, 255))
+        
+        # 4. Standard mouse cursor arrow pointing directly at (x, y)
+        cursor_points = [
+            (x, y),
+            (x + 1, y + 17),
+            (x + 5, y + 13),
+            (x + 9, y + 21),
+            (x + 12, y + 19),
+            (x + 8, y + 11),
+            (x + 13, y + 11)
+        ]
+        # Draw the black outline shadow and white pointer
+        draw.polygon(cursor_points, fill=(255, 255, 255, 255), outline=(0, 0, 0, 255), width=2)
 
     elif action == "scroll":
-        # Blue scroll indicator with higher opacity
-        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
-            draw.ellipse(
-                [x - r, y - r, x + r, y + r],
-                outline=(59, 130, 246, alpha),
-                width=3,
-            )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(59, 130, 246, 255))
+        # 1. Soft blue translucent outer ripple
+        draw.ellipse([x - 25, y - 25, x + 25, y + 25], fill=(59, 130, 246, 50), outline=(59, 130, 246, 180), width=2)
+        # 2. High-contrast inner white ring with solid blue border
+        draw.ellipse([x - 12, y - 12, x + 12, y + 12], fill=(255, 255, 255, 180), outline=(59, 130, 246, 255), width=2)
 
-        # Draw swipe directional arrow
+        # 3. Draw swipe directional arrow
         arrow_len = 24
         head_size = 7
         if direction == "up":
@@ -522,14 +529,17 @@ def _draw_highlight(img: Image.Image, x: int, y: int, action: str, direction: st
             )
 
     elif action == "type":
-        # Green typing indicator with higher opacity
-        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
-            draw.ellipse(
-                [x - r, y - r, x + r, y + r],
-                outline=(16, 185, 129, alpha),
-                width=3,
-            )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(16, 185, 129, 255))
+        # 1. Soft green translucent outer ripple
+        draw.ellipse([x - 25, y - 25, x + 25, y + 25], fill=(16, 185, 129, 50), outline=(16, 185, 129, 180), width=2)
+        # 2. High-contrast inner white ring with solid green border
+        draw.ellipse([x - 12, y - 12, x + 12, y + 12], fill=(255, 255, 255, 180), outline=(16, 185, 129, 255), width=2)
+        
+        # 3. Standard text I-beam cursor outline and draw
+        # Drawing a 3px wide black background and 1px wide white line for perfect readability
+        for width, color in [(3, (0, 0, 0, 255)), (1, (255, 255, 255, 255))]:
+            draw.line([(x, y - 8), (x, y + 8)], fill=color, width=width)
+            draw.line([(x - 4, y - 8), (x + 4, y - 8)], fill=color, width=width)
+            draw.line([(x - 4, y + 8), (x + 4, y + 8)], fill=color, width=width)
 
     # Composite
     base = img.convert("RGBA")
