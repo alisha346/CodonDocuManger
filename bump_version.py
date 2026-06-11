@@ -87,9 +87,9 @@ def bump(bump_type="patch", message=""):
     save_manifest(data)
     append_changelog(current, new_ver, bump_type, message)
 
-    print(f"  ✅  {current}  →  {new_ver}  ({bump_type})")
-    print(f"  📄  manifest.json updated")
-    print(f"  📋  CHANGELOG.md updated")
+    print(f"  [OK]  {current}  ->  {new_ver}  ({bump_type})")
+    print(f"  [INFO]  manifest.json updated")
+    print(f"  [INFO]  CHANGELOG.md updated")
     return new_ver
 
 def show():

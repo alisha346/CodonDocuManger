@@ -223,14 +223,29 @@ def _on_click(x: int, y: int, button: mouse.Button, pressed: bool) -> None:
         url = url_match.group(0)
         desc = f'Navigate to URL "{url}"'
     else:
-        # Get the control label under the cursor
-        ctrl_label = _control_under_cursor(x, y)
+        # Get the control label under the cursor using nearest button search
+        ctypes.windll.ole32.CoInitialize(None)
+        ctrl_label = ""
+        is_button = False
+        try:
+            control = auto.ControlFromPoint(x, y)
+            if control:
+                ctrl_label, is_button = _find_nearest_button_or_name(x, y, control)
+        except Exception as e:
+            print(f"[recorder] UI Automation failed: {e}")
+        finally:
+            ctypes.windll.ole32.CoUninitialize()
+
         if button == mouse.Button.right:
-            verb = "Right-click"
+            verb = "Right-clicking"
         else:
-            verb = "Click"
+            verb = "Clicking"
+
         if ctrl_label:
-            desc = f'{verb} "{ctrl_label}"'
+            if is_button:
+                desc = f'{verb} {ctrl_label} button'
+            else:
+                desc = f'{verb} {ctrl_label}'
         else:
             desc = verb
 
@@ -419,8 +434,34 @@ def _capture_screen(x: int, y: int, session_id: str, action: str = "click") -> P
         rx = x - monitor["left"]
         ry = y - monitor["top"]
 
-        # Draw highlight overlay
+        # Draw highlight overlay on the monitor screenshot
         img = _draw_highlight(img, rx, ry, action)
+
+        # Get active window rect to crop to the window boundary
+        import win32gui
+        hwnd = win32gui.GetForegroundWindow()
+        if hwnd:
+            try:
+                rect = win32gui.GetWindowRect(hwnd)
+                # Convert global coords to monitor-relative coordinates
+                wl = rect[0] - monitor["left"]
+                wt = rect[1] - monitor["top"]
+                wr = rect[2] - monitor["left"]
+                wb = rect[3] - monitor["top"]
+                
+                # Check that the window has valid size
+                if wr > wl and wb > wt:
+                    # Clip boundaries to monitor dimensions
+                    crop_left = max(0, wl)
+                    crop_top = max(0, wt)
+                    crop_right = min(img.width, wr)
+                    crop_bottom = min(img.height, wb)
+                    
+                    if crop_right > crop_left and crop_bottom > crop_top:
+                        img = img.crop((crop_left, crop_top, crop_right, crop_bottom))
+            except Exception as e:
+                print(f"[recorder] Failed to crop to active window: {e}")
+
         img.save(str(out_path), "PNG", optimize=True)
         return out_path
     except Exception as e:
@@ -433,19 +474,14 @@ def _draw_highlight(img: Image.Image, x: int, y: int, action: str) -> Image.Imag
     draw = ImageDraw.Draw(overlay)
 
     if action == "click":
-        # Single red outline circle
-        r = 24
-        draw.ellipse(
-            [x - r, y - r, x + r, y + r],
-            outline=(255, 0, 0, 255),
-            width=3,
-        )
-        # Center red dot
-        dot_r = 5
-        draw.ellipse(
-            [x - dot_r, y - dot_r, x + dot_r, y + dot_r],
-            fill=(255, 0, 0, 255),
-        )
+        # Red click indicator standardized with high opacity
+        for r, alpha in [(38, 50), (28, 100), (20, 160)]:
+            draw.ellipse(
+                [x - r, y - r, x + r, y + r],
+                outline=(239, 68, 68, alpha),
+                width=3,
+            )
+        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(239, 68, 68, 220))
 
     elif action == "scroll":
         # Blue scroll indicator
@@ -491,6 +527,78 @@ def _active_window() -> tuple[str, str]:
         return "", buf.value
     except Exception:
         return "", ""
+
+
+def _find_nearest_button_or_name(x: int, y: int, control) -> tuple[str, bool]:
+    if not control:
+        return "", False
+        
+    # Helper to check if type name is button-like
+    def is_button_type(ctrl) -> bool:
+        try:
+            return (ctrl.ControlType == auto.ControlType.ButtonControl or 
+                    ctrl.ControlTypeName == "ButtonControl" or
+                    ctrl.ControlType == auto.ControlType.HyperlinkControl or
+                    ctrl.ControlTypeName == "HyperlinkControl")
+        except Exception:
+            return False
+
+    # 1. If control itself is a button
+    if is_button_type(control) and control.Name and control.Name.strip():
+        return control.Name.strip(), True
+        
+    # 2. Walk up parent chain to find if we are inside a button
+    try:
+        curr = control
+        for _ in range(4):
+            curr = curr.GetParentControl()
+            if not curr:
+                break
+            if is_button_type(curr) and curr.Name and curr.Name.strip():
+                return curr.Name.strip(), True
+    except Exception:
+        pass
+                
+    # 3. Check if the control itself has a name
+    if control.Name and control.Name.strip():
+        return control.Name.strip(), False
+        
+    # 4. Check siblings of the control
+    try:
+        parent = control.GetParentControl()
+        if parent:
+            best_name = ""
+            best_is_btn = False
+            min_dist = float('inf')
+            siblings = parent.GetChildren()
+            for sib in siblings:
+                if not sib:
+                    continue
+                is_sib_btn = is_button_type(sib)
+                name = sib.Name
+                if name and name.strip():
+                    name = name.strip()
+                    rect = sib.BoundingRectangle
+                    if rect:
+                        # Find closest point on bounding rect
+                        dx = max(0, rect.left - x, x - rect.right)
+                        dy = max(0, rect.top - y, y - rect.bottom)
+                        dist = dx*dx + dy*dy
+                        
+                        if is_sib_btn:
+                            dist = dist / 2.0  # prioritize buttons/links
+                            
+                        if dist < min_dist:
+                            min_dist = dist
+                            best_name = name
+                            best_is_btn = is_sib_btn
+                            
+            if best_name and min_dist < 200 * 200:
+                return best_name, best_is_btn
+    except Exception:
+        pass
+            
+    return "", False
 
 
 def _control_under_cursor(x: int, y: int, prefer_class: bool = False) -> str:

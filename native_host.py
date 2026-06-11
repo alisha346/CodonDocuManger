@@ -17,15 +17,16 @@ def start_server():
     if is_server_running():
         return "Already running"
     
-    exe_path = r"D:\CodonDocuManger\CodonDocuManger.exe"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    exe_path = os.path.join(base_dir, "CodonDocuManger.exe")
     if os.path.exists(exe_path):
         # CREATE_NEW_CONSOLE (0x00000010) launches the executable in a new command window
-        subprocess.Popen([exe_path], creationflags=0x00000010, cwd=r"D:\CodonDocuManger")
+        subprocess.Popen([exe_path], creationflags=0x00000010, cwd=base_dir)
         return "Started via EXE"
     
-    bat_path = r"D:\CodonDocuManger\run_scribe.bat"
+    bat_path = os.path.join(base_dir, "run_scribe.bat")
     if os.path.exists(bat_path):
-        subprocess.Popen([bat_path], creationflags=0x00000010, cwd=r"D:\CodonDocuManger")
+        subprocess.Popen([bat_path], creationflags=0x00000010, cwd=base_dir)
         return "Started via BAT"
         
     return "Failed: No executable or batch file found"
