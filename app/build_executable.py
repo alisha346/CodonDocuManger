@@ -5,9 +5,9 @@ import shutil
 from pathlib import Path
 
 def build():
-    scribe_dir = Path(__file__).parent.resolve()
-    frontend_dir = scribe_dir / "frontend"
-    backend_dir = scribe_dir / "backend"
+    app_dir = Path(__file__).parent.resolve()
+    frontend_dir = app_dir / "frontend"
+    backend_dir = app_dir / "backend"
     
     print("--- 1. Building React Frontend ---")
     if not (frontend_dir / "package.json").exists():
@@ -26,7 +26,7 @@ def build():
     print("\n--- 2. Building Standalone Executable via PyInstaller ---")
     
     # We will trigger pyinstaller from within our virtual environment
-    venv_pyinstaller = scribe_dir / ".venv" / "Scripts" / "pyinstaller.exe"
+    venv_pyinstaller = app_dir / ".venv" / "Scripts" / "pyinstaller.exe"
     if not venv_pyinstaller.exists():
         venv_pyinstaller = "pyinstaller"
         
@@ -43,13 +43,13 @@ def build():
     ]
     
     print(f"Running command: {' '.join(cmd)}")
-    subprocess.run(cmd, cwd=str(scribe_dir), check=True)
+    subprocess.run(cmd, cwd=str(app_dir), check=True)
     
-    exe_file = scribe_dir / "dist" / "CodonDocuManger.exe"
+    exe_file = app_dir / "dist" / "CodonDocuManger.exe"
     if exe_file.exists():
         print(f"\n[SUCCESS] Standalone executable created at: {exe_file}")
         # Copy to the root directory D:\CodonDocuManger for convenience
-        dest_exe = scribe_dir.parent / "CodonDocuManger.exe"
+        dest_exe = app_dir.parent / "CodonDocuManger.exe"
         shutil.copy2(exe_file, dest_exe)
         print(f"[INFO] Copied executable to: {dest_exe}")
     else:

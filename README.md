@@ -34,7 +34,7 @@ The app starts on **http://localhost:8765** and opens automatically in your brow
 
 ### Option B — Run from Source (Development)
 ```bat
-run_scribe.bat
+run_app.bat
 ```
 This builds the React frontend and starts the FastAPI backend server.
 
@@ -90,7 +90,7 @@ This allows the extension to auto-start the local server:
 ```bat
 REM Run from inside your cloned folder
 cd <your-folder>
-scribe\.venv\Scripts\python.exe register_native_host.py
+app\.venv\Scripts\python.exe register_native_host.py
 ```
 
 
@@ -150,7 +150,7 @@ Click Extension Icon
 ### Setup
 ```bat
 REM Create virtual environment
-cd scribe
+cd app
 py -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
 
@@ -162,7 +162,7 @@ npm install
 ### Build Standalone Executable
 ```bat
 REM Run from inside your cloned folder
-cd <your-folder>\scribe
+cd <your-folder>\app
 .\.venv\Scripts\python.exe build_executable.py
 ```
 Output: `<your-folder>\CodonDocuManger.exe`

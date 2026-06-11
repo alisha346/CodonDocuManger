@@ -24,7 +24,7 @@ def start_server():
         subprocess.Popen([exe_path], creationflags=0x00000010, cwd=base_dir)
         return "Started via EXE"
     
-    bat_path = os.path.join(base_dir, "run_scribe.bat")
+    bat_path = os.path.join(base_dir, "run_app.bat")
     if os.path.exists(bat_path):
         subprocess.Popen([bat_path], creationflags=0x00000010, cwd=base_dir)
         return "Started via BAT"

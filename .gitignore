@@ -22,14 +22,14 @@ __pycache__/
 pip-log.txt
 
 # ── Virtual environments ───────────────────────────────────────
-scribe/.venv/
+app/.venv/
 .venv/
 venv/
 env/
 
 # ── PyInstaller build artifacts ────────────────────────────────
-scribe/build/
-scribe/dist/
+app/build/
+app/dist/
 *.spec
 
 # ── Compiled binaries (large, platform-specific) ───────────────
@@ -43,7 +43,7 @@ key.pem
 *.pem
 *.key
 drive_config.json
-scribe/backend/data/
+app/backend/data/
 
 # ── Editor directories and files ──────────────────────────────
 .vscode/*

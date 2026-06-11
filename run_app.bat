@@ -10,15 +10,15 @@ echo  ╚═══════════════════════�
 echo.
 
 REM Check if virtual environment exists
-if not exist "%~dp0scribe\.venv\Scripts\python.exe" (
+if not exist "%~dp0app\.venv\Scripts\python.exe" (
     echo [ERROR] Virtual environment not found.
-    echo Run setup first: cd scribe ^& py -m venv .venv ^& .venv\Scripts\pip install -r requirements.txt
+    echo Run setup first: cd app ^& py -m venv .venv ^& .venv\Scripts\pip install -r requirements.txt
     pause
     exit /b 1
 )
 
 echo [1/2] Building frontend...
-cd /d "%~dp0scribe\frontend"
+cd /d "%~dp0app\frontend"
 call npm run build >nul 2>&1
 
 echo [2/2] Starting CodonDocuManger server...
@@ -28,7 +28,7 @@ echo  Press F9 to stop recording from anywhere on your screen.
 echo  Close this window to shut down CodonDocuManger.
 echo.
 
-cd /d "%~dp0scribe\backend"
-"%~dp0scribe\.venv\Scripts\python.exe" main.py
+cd /d "%~dp0app\backend"
+"%~dp0app\.venv\Scripts\python.exe" main.py
 
 pause
