@@ -48,9 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     extVersionEl.textContent = `v${version}`;
   }
 
-  // Try starting the local server
-  startLocalServer();
-
   // Load persisted session from chrome.storage.local, then begin polling
   chrome.storage.local.get(['currentUser', 'activeProjectId'], (data) => {
     if (data.currentUser) {
@@ -145,12 +142,14 @@ function handleLogout() {
   });
 
   // Push LOGOUT message to webapp tab content script
-  chrome.tabs.query({ url: '*://localhost:8765/*' }, (tabs) => {
+  chrome.tabs.query({}, (tabs) => {
     if (tabs && tabs.length > 0) {
       tabs.forEach(tab => {
-        chrome.tabs.sendMessage(tab.id, { type: 'LOGOUT' }, () => {
-          if (chrome.runtime.lastError) {}
-        });
+        if (tab.url && (tab.url.includes('localhost:8765') || tab.url.includes('127.0.0.1:8765'))) {
+          chrome.tabs.sendMessage(tab.id, { type: 'LOGOUT' }, () => {
+            if (chrome.runtime.lastError) {}
+          });
+        }
       });
     }
   });
@@ -160,10 +159,11 @@ function handleLogout() {
 
 // Open url in existing localhost tab if one is open, otherwise create a new tab
 function openOrFocusTab(url) {
-  chrome.tabs.query({ url: '*://localhost:8765/*' }, (tabs) => {
-    if (tabs && tabs.length > 0) {
-      chrome.tabs.update(tabs[0].id, { url: url, active: true }, () => {
-        chrome.windows.update(tabs[0].windowId, { focused: true });
+  chrome.tabs.query({}, (tabs) => {
+    const targetTab = tabs && tabs.find(tab => tab.url && (tab.url.includes('localhost:8765') || tab.url.includes('127.0.0.1:8765')));
+    if (targetTab) {
+      chrome.tabs.update(targetTab.id, { url: url, active: true }, () => {
+        chrome.windows.update(targetTab.windowId, { focused: true });
       });
     } else {
       chrome.tabs.create({ url: url });

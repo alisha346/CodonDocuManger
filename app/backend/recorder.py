@@ -302,7 +302,7 @@ def _flush_scroll(x: int, y: int) -> None:
         direction = _state.get("scroll_direction", "down")
 
     _, win_title = _active_window()
-    screenshot_path = _capture_screen(x, y, sid, action="scroll")
+    screenshot_path = _capture_screen(x, y, sid, action="scroll", direction=direction)
     desc = f"Scroll {direction}"
 
     step = storage.add_step(
@@ -412,7 +412,7 @@ def _flush_key_buffer() -> None:
 
 # ─── Screen capture ───────────────────────────────────────────────────────────
 
-def _capture_screen(x: int, y: int, session_id: str, action: str = "click") -> Path | None:
+def _capture_screen(x: int, y: int, session_id: str, action: str = "click", direction: str | None = None) -> Path | None:
     try:
         session = storage.get_session(session_id)
         if session is None:
@@ -435,7 +435,7 @@ def _capture_screen(x: int, y: int, session_id: str, action: str = "click") -> P
         ry = y - monitor["top"]
 
         # Draw highlight overlay on the monitor screenshot
-        img = _draw_highlight(img, rx, ry, action)
+        img = _draw_highlight(img, rx, ry, action, direction=direction)
 
         # Get active window rect to crop to the window boundary
         import win32gui
@@ -469,39 +469,67 @@ def _capture_screen(x: int, y: int, session_id: str, action: str = "click") -> P
         return None
 
 
-def _draw_highlight(img: Image.Image, x: int, y: int, action: str) -> Image.Image:
+def _draw_highlight(img: Image.Image, x: int, y: int, action: str, direction: str | None = None) -> Image.Image:
     overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
     if action == "click":
-        # Red click indicator standardized with high opacity
-        for r, alpha in [(38, 50), (28, 100), (20, 160)]:
+        # Red click indicator standardized with higher opacity
+        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
             draw.ellipse(
                 [x - r, y - r, x + r, y + r],
                 outline=(239, 68, 68, alpha),
                 width=3,
             )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(239, 68, 68, 220))
+        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(239, 68, 68, 255))
 
     elif action == "scroll":
-        # Blue scroll indicator
-        for r, alpha in [(38, 40), (28, 80), (20, 120)]:
+        # Blue scroll indicator with higher opacity
+        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
             draw.ellipse(
                 [x - r, y - r, x + r, y + r],
                 outline=(59, 130, 246, alpha),
                 width=3,
             )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(59, 130, 246, 200))
+        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(59, 130, 246, 255))
+
+        # Draw swipe directional arrow
+        arrow_len = 24
+        head_size = 7
+        if direction == "up":
+            # Arrow pointing UP
+            draw.line(
+                [(x, y + arrow_len // 2), (x, y - arrow_len // 2)],
+                fill=(59, 130, 246, 255),
+                width=4,
+            )
+            draw.line(
+                [(x - head_size, y - arrow_len // 2 + head_size), (x, y - arrow_len // 2), (x + head_size, y - arrow_len // 2 + head_size)],
+                fill=(59, 130, 246, 255),
+                width=4,
+            )
+        else:
+            # Arrow pointing DOWN (default)
+            draw.line(
+                [(x, y - arrow_len // 2), (x, y + arrow_len // 2)],
+                fill=(59, 130, 246, 255),
+                width=4,
+            )
+            draw.line(
+                [(x - head_size, y + arrow_len // 2 - head_size), (x, y + arrow_len // 2), (x + head_size, y + arrow_len // 2 - head_size)],
+                fill=(59, 130, 246, 255),
+                width=4,
+            )
 
     elif action == "type":
-        # Green typing indicator
-        for r, alpha in [(38, 40), (28, 80), (20, 120)]:
+        # Green typing indicator with higher opacity
+        for r, alpha in [(38, 90), (28, 160), (20, 220)]:
             draw.ellipse(
                 [x - r, y - r, x + r, y + r],
                 outline=(16, 185, 129, alpha),
                 width=3,
             )
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(16, 185, 129, 200))
+        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(16, 185, 129, 255))
 
     # Composite
     base = img.convert("RGBA")

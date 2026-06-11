@@ -48,6 +48,7 @@ def to_html(session: dict[str, Any]) -> str:
     project_id = session.get("project_id")
     project_name = "Operations"
     project_color = "#a855f7"
+    project_logo = ""
     if project_id:
         try:
             import storage
@@ -55,8 +56,12 @@ def to_html(session: dict[str, Any]) -> str:
             if project:
                 if project.get("name"):
                     project_name = project["name"]
-                if project.get("branding") and project["branding"].get("colors"):
-                    project_color = project["branding"]["colors"][0]
+                if project.get("branding"):
+                    branding = project["branding"]
+                    if branding.get("colors"):
+                        project_color = branding["colors"][0]
+                    if branding.get("logo"):
+                        project_logo = branding["logo"]
         except Exception:
             pass
 
@@ -160,9 +165,227 @@ def to_html(session: dict[str, Any]) -> str:
   code {{ font-family: 'Courier New', monospace; background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px; }}
   .screenshot-wrap {{ margin-top: 14px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(168,85,247,0.12); }}
   .screenshot-wrap img {{ width: 100%; display: block; }}
+
+  /* Print-only layout elements default hidden on screen */
+  .print-only {{ display: none; }}
+
+  @media print {{
+    @page {{
+      size: A4 portrait;
+      margin-top: 2.2cm;
+      margin-bottom: 2.2cm;
+      margin-left: 1.5cm;
+      margin-right: 1.5cm;
+    }}
+    
+    body {{
+      background: #ffffff !important;
+      color: #0f172a !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      font-size: 10pt;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }}
+
+    .container {{
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }}
+
+    /* Print Header & Footer Layout */
+    .print-only {{
+      display: flex !important;
+    }}
+
+    .print-header {{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+      background: #ffffff;
+    }}
+
+    .print-header-left {{
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    
+    .print-divider {{
+      color: #cbd5e1;
+      font-weight: 300;
+    }}
+
+    .print-project-name {{
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: {project_color};
+    }}
+
+    .print-guide-name {{
+      color: #334155;
+    }}
+
+    .print-logo {{
+      max-height: 24px;
+      max-width: 120px;
+      object-fit: contain;
+    }}
+
+    .logo-fallback-text {{
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: {project_color};
+    }}
+
+    .print-footer {{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+      font-size: 0.75rem;
+      color: #64748b;
+      background: #ffffff;
+    }}
+
+    .sop-badge {{
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #475569;
+    }}
+
+    .page-number-label::after {{
+      content: counter(page);
+      font-weight: 700;
+      color: {project_color};
+    }}
+
+    /* Steps print layout - Industry SOP Standard */
+    .step {{
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: none !important;
+      border-radius: 12px !important;
+      padding: 18px !important;
+      margin-bottom: 24px !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }}
+
+    .step-num {{
+      background: {project_color} !important;
+      color: #ffffff !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }}
+
+    .step-description {{
+      color: #0f172a !important;
+      font-size: 1.05rem !important;
+    }}
+
+    .step-meta {{
+      color: #475569 !important;
+    }}
+
+    .project-context {{
+      color: {project_color} !important;
+    }}
+
+    h1 {{
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+      color: #0f172a !important;
+      font-size: 2rem !important;
+      margin-top: 10px !important;
+    }}
+
+    .subtitle {{
+      color: #475569 !important;
+      margin-bottom: 25px !important;
+    }}
+
+    .badge-click {{
+      background: #fef2f2 !important;
+      color: #dc2626 !important;
+      border: 1px solid #fee2e2 !important;
+    }}
+
+    .badge-type {{
+      background: #eff6ff !important;
+      color: #2563eb !important;
+      border: 1px solid #dbeafe !important;
+    }}
+
+    .badge-scroll {{
+      background: #ecfdf5 !important;
+      color: #059669 !important;
+      border: 1px solid #d1fae5 !important;
+    }}
+
+    .app-badge {{
+      background: #f8fafc !important;
+      color: #475569 !important;
+      border: 1px solid #e2e8f0 !important;
+    }}
+
+    .typed-text {{
+      background: #eff6ff !important;
+      border-left: 3px solid #3b82f6 !important;
+      color: #1e40af !important;
+    }}
+
+    .screenshot-wrap {{
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: none !important;
+      margin-top: 10px !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }}
+  }}
 </style>
 </head>
 <body>
+<div class="print-header print-only">
+  <div class="print-header-left">
+    <span class="print-project-name">{_esc(project_name)}</span>
+    <span class="print-divider">/</span>
+    <span class="print-guide-name">{_esc(session["name"])}</span>
+  </div>
+  <div class="print-header-right">
+    {f'<img src="{project_logo}" class="print-logo" />' if project_logo else f'<span class="logo-fallback-text">{_esc(project_name)}</span>'}
+  </div>
+</div>
+
+<div class="print-footer print-only">
+  <div class="print-footer-left">
+    {f'<img src="{project_logo}" class="print-logo" />' if project_logo else '<span class="logo-fallback-text">CodonDocuManger</span>'}
+  </div>
+  <div class="print-footer-right">
+    <span class="sop-badge">Standard Operating Procedure</span>
+    <span class="print-divider">|</span>
+    <span class="page-number-label">Page </span>
+  </div>
+</div>
+
 <div class="container">
   <div class="project-context">{_esc(project_name)}</div>
   <h1>{_esc(session["name"])}</h1>
