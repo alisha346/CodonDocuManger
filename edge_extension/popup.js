@@ -378,6 +378,15 @@ async function handleAction() {
 
       if (!projectId) {
         alert('Please configure a project.');
+        actionBtn.removeAttribute('disabled');
+        actionBtn.textContent = '⚡ Start Capture Session';
+        return;
+      }
+
+      if (!guideName) {
+        alert('Please enter a guide name.');
+        actionBtn.removeAttribute('disabled');
+        actionBtn.textContent = '⚡ Start Capture Session';
         return;
       }
 

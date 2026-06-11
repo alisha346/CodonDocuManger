@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query, Header
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query, Header, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -237,7 +237,10 @@ def remove_project_member(project_id: str, username: str) -> dict:
 
 @app.post("/api/sessions")
 def create_session(body: CreateSessionBody) -> dict:
-    return storage.create_session(body.name, body.project_id)
+    name = body.name.strip()
+    if not name:
+        raise HTTPException(400, "Guide name is mandatory")
+    return storage.create_session(name, body.project_id)
 
 
 @app.get("/api/sessions")
@@ -349,6 +352,84 @@ def export_markdown(session_id: str) -> PlainTextResponse:
         content=md,
         headers={"Content-Disposition": f'attachment; filename="guide_{session_id[:8]}.md"'},
     )
+
+
+@app.get("/api/sessions/{session_id}/export/pdf")
+def export_pdf(session_id: str, background_tasks: BackgroundTasks) -> FileResponse:
+    s = storage.get_session(session_id)
+    if not s:
+        raise HTTPException(404, "Session not found")
+        
+    html_content = exporter.to_html(s)
+    
+    import tempfile
+    import subprocess
+    import os
+    from pathlib import Path
+    
+    # Write to a temporary HTML file
+    temp_dir = Path(tempfile.gettempdir())
+    html_path = temp_dir / f"guide_{session_id}.html"
+    pdf_path = temp_dir / f"guide_{session_id}.pdf"
+    
+    with open(html_path, "w", encoding="utf-8") as f:
+        f.write(html_content)
+        
+    # Helper to find Chrome/Edge
+    def find_chrome_or_edge():
+        paths = [
+            r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        ]
+        for p in paths:
+            if os.path.exists(p):
+                return p
+        return None
+        
+    browser_exe = find_chrome_or_edge()
+    if not browser_exe:
+        if html_path.exists():
+            html_path.unlink()
+        raise HTTPException(500, "No Chromium-based browser (Edge/Chrome) found to generate PDF")
+        
+    cmd = [
+        browser_exe,
+        "--headless",
+        "--disable-gpu",
+        "--no-sandbox",
+        f"--print-to-pdf={pdf_path}",
+        f"file:///{html_path.resolve()}"
+    ]
+    
+    try:
+        subprocess.run(cmd, check=True, timeout=20)
+    except Exception as e:
+        if html_path.exists():
+            html_path.unlink()
+        if pdf_path.exists():
+            pdf_path.unlink()
+        raise HTTPException(500, f"PDF generation failed: {e}")
+        
+    # Background cleanup
+    def cleanup():
+        try:
+            if html_path.exists():
+                html_path.unlink()
+            if pdf_path.exists():
+                pdf_path.unlink()
+        except Exception:
+            pass
+            
+    background_tasks.add_task(cleanup)
+    
+    return FileResponse(
+        str(pdf_path),
+        media_type="application/pdf",
+        filename=f"guide_{session_id[:8]}.pdf"
+    )
+
 
 
 # ─── Screenshot serving ───────────────────────────────────────────────────────

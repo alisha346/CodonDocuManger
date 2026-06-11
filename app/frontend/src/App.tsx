@@ -391,7 +391,12 @@ export default function App() {
 
   async function createSession() {
     if (effectiveRole === 'Viewer') return
-    const session = await api.createSession(newName.trim() || '', activeProjectId)
+    const trimmed = newName.trim()
+    if (!trimmed) {
+      alert('Please enter a guide name.')
+      return
+    }
+    const session = await api.createSession(trimmed, activeProjectId)
     setSessions(prev => [session, ...prev])
     setNewName('')
     setCreatingSession(false)

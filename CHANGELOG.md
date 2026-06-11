@@ -11,3 +11,7 @@
 ## [1.03.01] — 2026-06-11 14:14
 - **✨ Enhancement**: bumped from `1.02.01` → `1.03.01`
 - Implement window screenshot cropping, standardized high-opacity click action circle, and nearest-button click description recognition
+
+## [1.04.01] — 2026-06-11 14:28
+- **✨ Enhancement**: bumped from `1.03.01` → `1.04.01`
+- Add direct PDF export, project context headings in exported documents, and make guide name mandatory on creation

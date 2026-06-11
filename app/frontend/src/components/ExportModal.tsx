@@ -61,7 +61,7 @@ export function ExportModal({ session, onClose }: Props) {
             </div>
           </button>
 
-          <button className={styles.option} id="export-print-btn" onClick={() => window.open(api.exportHtmlUrl(session.id), '_blank')}>
+          <button className={styles.option} id="export-print-btn" onClick={() => window.open(api.exportPdfUrl(session.id), '_blank')}>
             <div className={styles.optionIcon} style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)' }}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5">
                 <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
@@ -69,8 +69,8 @@ export function ExportModal({ session, onClose }: Props) {
               </svg>
             </div>
             <div className={styles.optionBody}>
-              <div className={styles.optionTitle}>PDF (via Print)</div>
-              <div className={styles.optionDesc}>Opens the HTML guide in a new tab. Use browser's Print → Save as PDF to generate a crisp PDF document.</div>
+              <div className={styles.optionTitle}>PDF Document (.pdf)</div>
+              <div className={styles.optionDesc}>Download a formatted PDF document of the guide with all screenshots, perfect for printing or offline reading.</div>
             </div>
             <div className={styles.optionArrow}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>

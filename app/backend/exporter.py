@@ -20,7 +20,18 @@ def _b64_image(path: str | None) -> str | None:
 
 
 def to_markdown(session: dict[str, Any]) -> str:
-    lines = [f"# {session['name']}", ""]
+    project_id = session.get("project_id")
+    project_name = "Operations"
+    if project_id:
+        try:
+            import storage
+            project = storage.get_project(project_id)
+            if project and project.get("name"):
+                project_name = project["name"]
+        except Exception:
+            pass
+            
+    lines = [f"# {project_name} / {session['name']}", ""]
     for step in session.get("steps", []):
         lines.append(f"## Step {step['order']}: {step['description']}")
         lines.append(f"> **App**: {step.get('app_name', '')}  |  **Action**: {step.get('type', '').capitalize()}")
@@ -34,6 +45,21 @@ def to_markdown(session: dict[str, Any]) -> str:
 
 
 def to_html(session: dict[str, Any]) -> str:
+    project_id = session.get("project_id")
+    project_name = "Operations"
+    project_color = "#a855f7"
+    if project_id:
+        try:
+            import storage
+            project = storage.get_project(project_id)
+            if project:
+                if project.get("name"):
+                    project_name = project["name"]
+                if project.get("branding") and project["branding"].get("colors"):
+                    project_color = project["branding"]["colors"][0]
+        except Exception:
+            pass
+
     steps_html = ""
     for step in session.get("steps", []):
         img_tag = ""
@@ -85,11 +111,20 @@ def to_html(session: dict[str, Any]) -> str:
     padding: 40px 20px;
   }}
   .container {{ max-width: 860px; margin: 0 auto; }}
+  .project-context {{
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: {project_color};
+    margin-bottom: 6px;
+  }}
   h1 {{
     font-family: 'Outfit', sans-serif;
     font-size: 2.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    background: linear-gradient(135deg, {project_color}, #7c3aed);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 8px;
@@ -106,7 +141,7 @@ def to_html(session: dict[str, Any]) -> str:
   .step-header {{ display: flex; gap: 16px; align-items: flex-start; margin-bottom: 12px; }}
   .step-num {{
     min-width: 36px; height: 36px;
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    background: linear-gradient(135deg, {project_color}, #7c3aed);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 0.85rem; color: #fff; flex-shrink: 0;
@@ -129,12 +164,14 @@ def to_html(session: dict[str, Any]) -> str:
 </head>
 <body>
 <div class="container">
+  <div class="project-context">{_esc(project_name)}</div>
   <h1>{_esc(session["name"])}</h1>
   <p class="subtitle">{len(session.get("steps", []))} steps captured</p>
   {steps_html}
 </div>
 </body>
 </html>"""
+
 
 
 def _esc(s: str) -> str:

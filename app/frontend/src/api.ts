@@ -204,6 +204,10 @@ export const api = {
     return `${BASE}/sessions/${id}/export/markdown`
   },
 
+  exportPdfUrl(id: string): string {
+    return `${BASE}/sessions/${id}/export/pdf`
+  },
+
   // Screenshot
   screenshotUrl(sessionId: string, filename: string): string {
     return `${BASE}/screenshots/${sessionId}/${filename}`

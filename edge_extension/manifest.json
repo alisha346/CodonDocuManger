@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CodonDocuManger Companion",
-  "version": "1.03.01",
+  "version": "1.04.01",
   "description": "Microsoft Edge companion to control CodonDocuManger guide recorder directly from the toolbar.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs+K9r0qaOseJpAORT+3fR21kOLkXLX9oByhTKXvqFBwleIvNsC7Yv+XIWjo8BQzjiXR/7I58V56rf3tuIOQMM2YGCSYFs2DaVpmiHWRvgOT18Y+Rxo0pQcq3ZAqN63sualhLq0yuRHyQYeRsTxOsOUTQ9ygjlBSasG1uzlCCfo8Vj8iU834C/XqkNAqRohagZBIgKlL0YgVt1yqEDZoIKht8zhRXoGANlUAF/eCv2mnLW6Bx5t1E1pl02COBzCmDjkzo11XuYMsLfMrU+J+sS1A5+fRbRr7qcUb9SrxrikB5qT8xKsEG8kkgZ+Hfb1qdUtSWph1/dWbPjvYFAcLh5wIDAQAB",
   "action": {
