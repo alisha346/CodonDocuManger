@@ -18,7 +18,7 @@
 | 🚀 **Auto-Start Server** | Opening the extension automatically launches the local server |
 | 📑 **Single-Tab Navigation** | Settings, guides, and sign-up open in existing tab, never duplicates |
 | 📝 **Guide Editor** | Edit, reorder, and annotate captured steps |
-| 📤 **HTML / Markdown Export** | Export guides to HTML or Markdown |
+| 📤 **HTML / Markdown / PDF Export** | Export guides to HTML, Markdown, or print-ready SOP PDF standard with branding |
 | 👥 **Team Members & Roles** | Admin / Editor / Viewer access per project |
 | 🏷️ **Project Branding** | Custom logo, colours, and fonts per project |
 
@@ -173,6 +173,8 @@ Output: `<your-folder>\CodonDocuManger.exe`
 
 | Version | Type | Changes |
 |---|---|---|
+| `1.05.00` | Major | SOP PDF print-theme layout; repeating logo headers/footers with dynamic page numbers; high-opacity highlights with swipe direction arrows; duplicate start tab prevention; IP matching tab reuse |
+| `1.04.01` | Enhancement | Mandatory guide names; context headings in exports; direct PDF download endpoint |
 | `1.02.01` | Enhancement | Auto-version system with watcher and footer version display |
 | `1.01.01` | Enhancement | Added + New Project button to extension popup |
 | `1.0.02` | Minor | Webapp session auto-sync to extension via `content.js`; `chrome.storage.local` persistence |
