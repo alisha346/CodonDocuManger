@@ -25,6 +25,7 @@ const connectDriveBtn = document.getElementById('connect-drive-btn');
 const controlsPanel = document.getElementById('controls-panel');
 const projectSelect = document.getElementById('project-select');
 const guideNameInput = document.getElementById('guide-name');
+const guideNameError = document.getElementById('guide-name-error');
 const actionBtn = document.getElementById('action-btn');
 
 // New project form elements
@@ -68,6 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
   connectDriveBtn.addEventListener('click', () => openOrFocusTab('http://localhost:8765/?view=settings'));
   projectSelect.addEventListener('change', handleProjectChange);
   actionBtn.addEventListener('click', handleAction);
+  guideNameInput.addEventListener('input', () => {
+    if (guideNameInput.value.trim()) {
+      guideNameInput.classList.remove('input-error');
+      guideNameError.style.display = 'none';
+    }
+  });
   signupLink.addEventListener('click', (e) => {
     e.preventDefault();
     openOrFocusTab('http://localhost:8765/?view=signup');
@@ -384,7 +391,9 @@ async function handleAction() {
       }
 
       if (!guideName) {
-        alert('Please enter a guide name.');
+        guideNameInput.classList.add('input-error');
+        guideNameError.style.display = 'block';
+        guideNameInput.focus();
         actionBtn.removeAttribute('disabled');
         actionBtn.textContent = '⚡ Start Capture Session';
         return;

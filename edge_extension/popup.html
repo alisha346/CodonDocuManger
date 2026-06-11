@@ -80,8 +80,9 @@
           </div>
 
           <div class="form-group">
-            <label for="guide-name">Guide Name (Optional)</label>
-            <input type="text" id="guide-name" class="text-input" placeholder="e.g. Create Account Guide">
+            <label for="guide-name">Guide Name <span class="required-asterisk">*</span></label>
+            <input type="text" id="guide-name" class="text-input" placeholder="e.g. Create Account Guide" autocomplete="off">
+            <div id="guide-name-error" class="error-msg" style="display: none;">Guide name is required.</div>
           </div>
 
           <div class="form-group">
